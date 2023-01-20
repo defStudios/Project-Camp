@@ -12,6 +12,7 @@ namespace Core
         [Space]
         [SerializeField] private float height;
         [SerializeField] private LayerMask groundLayers;
+        [SerializeField] private Transform model;
         [SerializeField] private Transform orientation;
         [SerializeField] private Rigidbody rb;
 
@@ -28,10 +29,14 @@ namespace Core
         {
             _input = new Input.InputController(config.FlyingActivationWindow);
 
-            _movement = new MovementHandler(transform, orientation, rb, height, config.GroundDrag, groundLayers, 
-                config.MoveSpeed, config.FlightSpeed, config.JumpForce, config.JumpAirMultiplier);
+            _movement = new MovementHandler(transform, orientation, rb,
+                height, config.GroundDrag, groundLayers, 
+                config.MoveSpeed, config.FlightSpeed,
+                config.JumpForce, config.JumpAirMultiplier);
 
-            _rotation = new RotationHandler(transform, orientation, Camera.main.transform, config.RotationSpeed);
+            _rotation = new RotationHandler(transform, model, orientation,
+                Camera.main.transform, config.RotationSpeed);
+
             _inputMovement = new InputMovement(_input, _movement, _rotation);
 
             followCamCreator.CreateCamera(transform);

@@ -7,6 +7,7 @@ namespace Core.Movements
         private Transform _cameraTransform;
 
         private Transform _transform;
+        private Transform _model;
         private Transform _orientation;
 
         private float _deltaTime;
@@ -15,9 +16,10 @@ namespace Core.Movements
         private Vector3 _orientationForward;
         private Vector3 _inputDirection;
 
-        public RotationHandler(Transform transform, Transform orientation, Transform cameraTransform, float rotationSpeed)
+        public RotationHandler(Transform transform, Transform model, Transform orientation, Transform cameraTransform, float rotationSpeed)
         {
             _transform = transform;
+            _model = model;
             _orientation = orientation;
             _cameraTransform = cameraTransform;
 
@@ -27,15 +29,17 @@ namespace Core.Movements
         public void Tick(float deltaTime)
         {
             _deltaTime = deltaTime;
-        }
 
-        public void FixedTick(float deltaTime)
-        {
             if (_orientationForward != Vector3.zero)
                 _orientation.forward = _orientationForward;
 
             if (_inputDirection != Vector3.zero)
-                _transform.forward = Vector3.Slerp(_transform.forward, _inputDirection.normalized, _deltaTime * _rotationSpeed);
+                _model.forward = Vector3.Slerp(_model.forward, _inputDirection.normalized, _deltaTime * _rotationSpeed);
+        }
+
+        public void FixedTick(float deltaTime)
+        {
+
         }
 
         public void Rotate(Vector3 direction)

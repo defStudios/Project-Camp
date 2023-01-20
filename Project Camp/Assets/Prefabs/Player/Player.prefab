@@ -181,6 +181,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 192
+  model: {fileID: 1647508622591594312}
   orientation: {fileID: 4485283590379349217}
   rb: {fileID: 1647508623990145098}
   followCamCreator: {fileID: 1647508623990145096}
