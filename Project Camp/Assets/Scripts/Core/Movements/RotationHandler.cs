@@ -4,8 +4,6 @@ namespace Core.Movements
 {
     public class RotationHandler
     {
-        private Transform _cameraTransform;
-
         private Transform _transform;
         private Transform _model;
         private Transform _orientation;
@@ -16,12 +14,11 @@ namespace Core.Movements
         private Vector3 _orientationForward;
         private Vector3 _inputDirection;
 
-        public RotationHandler(Transform transform, Transform model, Transform orientation, Transform cameraTransform, float rotationSpeed)
+        public RotationHandler(Transform transform, Transform model, Transform orientation, float rotationSpeed)
         {
             _transform = transform;
             _model = model;
             _orientation = orientation;
-            _cameraTransform = cameraTransform;
 
             _rotationSpeed = rotationSpeed;
         }
@@ -37,17 +34,12 @@ namespace Core.Movements
                 _model.forward = Vector3.Slerp(_model.forward, _inputDirection.normalized, _deltaTime * _rotationSpeed);
         }
 
-        public void FixedTick(float deltaTime)
+        public void Rotate(Vector3 cameraPosition, Vector3 moveDirection)
         {
+            cameraPosition = new Vector3(cameraPosition.x, _transform.position.y, cameraPosition.z);
+            _orientationForward = (_transform.position - cameraPosition).normalized;
 
-        }
-
-        public void Rotate(Vector3 direction)
-        {
-            var camProjectedPos = new Vector3(_cameraTransform.position.x, _transform.position.y, _cameraTransform.position.z);
-            _orientationForward = (_transform.position - camProjectedPos).normalized;
-
-            _inputDirection = _orientation.forward * direction.z + _orientation.right * direction.x;
+            _inputDirection = _orientation.forward * moveDirection.z + _orientation.right * moveDirection.x;
         }
     }
 }

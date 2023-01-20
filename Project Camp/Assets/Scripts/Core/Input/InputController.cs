@@ -1,21 +1,31 @@
 using InputModule = UnityEngine.Input;
 using UnityEngine;
-using System;
 
 namespace Core.Input
 {
     public class InputController
     {
-        public Action<Vector3> MoveButtonPressed;
-        public Action MoveButtonsReleased;
-        public Action JumpButtonPressed;
-        public Action FlyButtonPressed;
+        public event MoveInputHandler OnMoveInput;
+        public delegate void MoveInputHandler(Vector3 cameraPosition, Vector3 input);
+
+        public event JumpInputHandler OnJumpInputPressed;
+        public delegate void JumpInputHandler();
+
+        public event FlightModeInputHandler OnFlightModePressed;
+        public delegate void FlightModeInputHandler();
+
+        public event FlightInputHandler OnFlightInputPressed;
+        public delegate void FlightInputHandler(Vector3 direction);
 
         private float _flyingActivationWindowDuration;
         private float _currentFlyingActivationWindow;
 
-        public InputController(float flyingActivationWindowDuration)
+        private Transform _cameraTransform;
+        private Vector3 _lastMovementDirection;
+
+        public InputController(Transform cameraTransform, float flyingActivationWindowDuration)
         {
+            _cameraTransform = cameraTransform;
             _flyingActivationWindowDuration = flyingActivationWindowDuration;
         }
 
@@ -32,10 +42,11 @@ namespace Core.Input
             if (InputModule.GetKey(KeyCode.D))
                 moveDirection += Vector3.right;
 
-            if (moveDirection != Vector3.zero)
-                MoveButtonPressed?.Invoke(moveDirection);
-            else
-                MoveButtonsReleased?.Invoke();
+            if (moveDirection != Vector3.zero ||
+                moveDirection != _lastMovementDirection)
+            {
+                OnMoveInput?.Invoke(_cameraTransform.position, moveDirection);
+            }
 
             if (_currentFlyingActivationWindow > 0)
                 _currentFlyingActivationWindow -= deltaTime;
@@ -44,15 +55,22 @@ namespace Core.Input
             {
                 if (_currentFlyingActivationWindow > 0)
                 {
-                    FlyButtonPressed?.Invoke();
+                    OnFlightModePressed?.Invoke();
                     _currentFlyingActivationWindow = 0;
                 }
                 else
                 {
-                    JumpButtonPressed?.Invoke();
+                    OnJumpInputPressed?.Invoke();
                     _currentFlyingActivationWindow = _flyingActivationWindowDuration;
                 }
             }
+
+            if (InputModule.GetKey(KeyCode.Space))
+                OnFlightInputPressed?.Invoke(Vector3.up);
+            if (InputModule.GetKey(KeyCode.LeftShift))
+                OnFlightInputPressed?.Invoke(Vector3.down);
+
+            _lastMovementDirection = moveDirection;
         }
     }
 }

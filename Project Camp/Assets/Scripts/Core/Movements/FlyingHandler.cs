@@ -1,6 +1,4 @@
-using TMPro.EditorUtilities;
 using UnityEngine;
-using UnityEngine.Windows;
 
 namespace Core.Movements
 {
@@ -11,7 +9,6 @@ namespace Core.Movements
         private Transform _transform;
         private Transform _orientation;
         private Rigidbody _rigidbody;
-        private Transform _cameraTransform;
 
         private float _flightSpeed;
         private float _flightDrag;
@@ -25,13 +22,12 @@ namespace Core.Movements
         private float _height;
         private const float _heightOffset = .2f;
 
-        public FlightHandler(Transform transform, Transform orientation, Rigidbody rigidbody, Transform cameraTransform, 
+        public FlightHandler(Transform transform, Transform orientation, Rigidbody rigidbody,
             float fightSpeed, float flightDrag, float height, LayerMask groundLayers)
         {
             _transform = transform;
             _orientation = orientation;
             _rigidbody = rigidbody;
-            _cameraTransform = cameraTransform;
 
             _flightSpeed = fightSpeed;
             _flightDrag = flightDrag;
@@ -88,10 +84,15 @@ namespace Core.Movements
             LimitVelocity();
         }
 
-        public void Move(Vector3 input)
+        public void Move(Vector3 cameraPosition, Vector3 input)
         {
             _inputDirection = input;
-            _camDirection = (_transform.position - _cameraTransform.position).normalized;
+            _camDirection = (_transform.position - cameraPosition).normalized;
+        }
+
+        public void ChangeAltitude(Vector3 direction)
+        {
+            
         }
 
         private void LimitVelocity()

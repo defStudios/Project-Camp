@@ -30,18 +30,18 @@ namespace Core
         {
             var camTransf = Camera.main.transform;
 
-            _input = new Input.InputController(config.FlyingActivationWindow);
+            _input = new Input.InputController(camTransf, config.FlyingActivationWindow);
 
             _movement = new MovementHandler(transform, orientation, rb,
                 height, config.GroundDrag, groundLayers, 
                 config.MoveSpeed, config.JumpForce, config.JumpAirMultiplier);
             _movement.Enable();
 
-            _flight = new FlightHandler(transform, orientation, rb, camTransf,
+            _flight = new FlightHandler(transform, orientation, rb,
                 config.FlightSpeed, config.FlightDrag, height, groundLayers);
 
             _rotation = new RotationHandler(transform, model, orientation,
-                camTransf, config.RotationSpeed);
+                config.RotationSpeed);
 
             _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
         }
@@ -62,7 +62,6 @@ namespace Core
 
             _movement.FixedTick(delta);    
             _flight.FixedTick(delta);
-            _rotation.FixedTick(delta);
         }
     }
 }

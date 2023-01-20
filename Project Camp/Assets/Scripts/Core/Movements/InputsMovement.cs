@@ -17,23 +17,19 @@ namespace Core.Movements
             _flight = flight;
             _rotation = rotation;
 
-            _input.MoveButtonPressed += OnMoveButtonPressed;
-            _input.MoveButtonsReleased += OnMoveButtonsReleased;
-            _input.JumpButtonPressed += OnJumpButtonPressed;
-            _input.FlyButtonPressed += OnFlyingButtonPressed;
+            _input.OnMoveInput += OnMoveButtonPressed;
+            _input.OnJumpInputPressed += OnJumpButtonPressed;
+
+            _input.OnFlightModePressed += OnFlyingButtonPressed;
+            _input.OnFlightInputPressed += OnFlightInputPressed;
         }
 
-        private void OnMoveButtonPressed(Vector3 direction)
+        private void OnMoveButtonPressed(Vector3 camPosition, Vector3 moveDirection)
         {
-            _movement.Move(direction);
-            _flight.Move(direction);
-            _rotation.Rotate(direction);
-        }
+            _movement.Move(moveDirection);
+            _flight.Move(camPosition, moveDirection);
 
-        private void OnMoveButtonsReleased()
-        {
-            _movement.Move(Vector3.zero);
-            _flight.Move(Vector3.zero);
+            _rotation.Rotate(camPosition, moveDirection);
         }
 
         private void OnJumpButtonPressed()
@@ -43,6 +39,7 @@ namespace Core.Movements
 
         private void OnFlyingButtonPressed()
         {
+            // ???
             if (_flight.ModeActive)
             {
                 _flight.Disable();
@@ -53,6 +50,11 @@ namespace Core.Movements
                 _flight.Enable();
                 _movement.Disable();
             }
+        }
+
+        private void OnFlightInputPressed(Vector3 moveDirection)
+        {
+            _flight.ChangeAltitude(moveDirection);
         }
     }
 }
