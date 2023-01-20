@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: Player Config
   m_EditorClassIdentifier: 
   flyingActivationWindow: 0.5
-  moveSpeed: 10
+  moveSpeed: 80
+  flightSpeed: 15
+  rotationSpeed: 15
+  groundDrag: 5
+  jumpForce: 12
+  jumpAirMultiplier: 0.07
