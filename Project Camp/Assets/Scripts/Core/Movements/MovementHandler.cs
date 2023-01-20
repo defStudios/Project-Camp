@@ -1,28 +1,19 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core.Movements
 {
     public class MovementHandler
     {
-        public enum MovementType
-        {
-            Walking,
-            Flying
-        }
-
-        private MovementType _moveType;
-
         private Transform _transform;
         private Transform _orientation;
         private Rigidbody _rigidbody;
 
         private float _moveSpeed;
-        private float _flySpeed;
         private float _jumpForce;
         private float _jumpAirMultiplier;
 
-        private Vector3 _moveDirection;
+        private bool _modeActive;
+
         private Vector3 _inputDirection;
 
         private float _height;
@@ -34,8 +25,8 @@ namespace Core.Movements
         private const float _heightOffset = .2f;
 
         public MovementHandler(Transform transform, Transform orientation, Rigidbody rigidbody,
-            float height, float groundDrag, LayerMask groundLayers, 
-            float moveSpeed, float flySpeed, float jumpForce, float jumpAirMultiplier)
+            float height, float groundDrag, LayerMask groundLayers,
+            float moveSpeed, float jumpForce, float jumpAirMultiplier)
         {
             _transform = transform;
             _orientation = orientation;
@@ -45,45 +36,55 @@ namespace Core.Movements
             _groundDrag = groundDrag;
             _groundLayers = groundLayers;
 
-            _moveType = MovementType.Walking;
             _moveSpeed = moveSpeed;
-            _flySpeed = flySpeed;
             _jumpForce = jumpForce;
             _jumpAirMultiplier = jumpAirMultiplier;
         }
 
+        public void Enable()
+        {
+            _modeActive = true;
+            _rigidbody.useGravity = true;
+        }
+
+        public void Disable() => _modeActive = false;
+
         public void Tick(float deltaTime)
         {
+            if (!_modeActive)
+                return;
+
             _isOnGround = Physics.Raycast(_transform.position, Vector3.down, _height * .5f + _heightOffset, _groundLayers);
             _rigidbody.drag = _isOnGround ? _groundDrag : 0;
         }
 
         public void FixedTick(float fixedDeltaTime)
         {
+            if (!_modeActive)
+                return;
+
             float multi = _isOnGround ? 1 : _jumpAirMultiplier;
 
-            _moveDirection = _orientation.forward * _inputDirection.z + _orientation.right * _inputDirection.x;
-            _rigidbody.AddForce(_moveDirection.normalized * _moveSpeed * multi, ForceMode.Force);
+            var moveDirection = _orientation.forward * _inputDirection.z + _orientation.right * _inputDirection.x;
+            _rigidbody.AddForce(moveDirection.normalized * _moveSpeed * multi, ForceMode.Force);
 
             LimitVelocity();
         }
 
         public void Move(Vector3 direction)
         {
+            if (!_modeActive)
+                return;
+
             _inputDirection = direction;
         }
 
         public void TryJump()
         {
-            if (!_isOnGround)
+            if (!_modeActive || !_isOnGround)
                 return;
 
             Jump();
-        }
-
-        public void ToggleFlyingMode()
-        {
-            _moveType = _moveType == MovementType.Flying ? MovementType.Walking : MovementType.Flying;
         }
 
         private void Jump()

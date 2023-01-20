@@ -17,29 +17,33 @@ namespace Core
         [SerializeField] private Rigidbody rb;
 
         [Space]
-        [SerializeField] private FollowCameraCreator followCamCreator;
+        [SerializeField] private Cinemachine.CinemachineVirtualCameraBase vcam;
         [SerializeField] private CollisionHandler collisions;
 
         private Input.InputController _input;
         private MovementHandler _movement;
+        private FlightHandler _flight;
         private RotationHandler _rotation;
         private InputMovement _inputMovement;
 
         private void Start()
         {
+            var camTransf = Camera.main.transform;
+
             _input = new Input.InputController(config.FlyingActivationWindow);
 
             _movement = new MovementHandler(transform, orientation, rb,
                 height, config.GroundDrag, groundLayers, 
-                config.MoveSpeed, config.FlightSpeed,
-                config.JumpForce, config.JumpAirMultiplier);
+                config.MoveSpeed, config.JumpForce, config.JumpAirMultiplier);
+            _movement.Enable();
+
+            _flight = new FlightHandler(transform, orientation, rb, camTransf,
+                config.FlightSpeed, config.FlightDrag, height, groundLayers);
 
             _rotation = new RotationHandler(transform, model, orientation,
-                Camera.main.transform, config.RotationSpeed);
+                camTransf, config.RotationSpeed);
 
-            _inputMovement = new InputMovement(_input, _movement, _rotation);
-
-            followCamCreator.CreateCamera(transform);
+            _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
         }
 
         private void Update()
@@ -57,6 +61,7 @@ namespace Core
             float delta = Time.fixedDeltaTime;
 
             _movement.FixedTick(delta);    
+            _flight.FixedTick(delta);
             _rotation.FixedTick(delta);
         }
     }

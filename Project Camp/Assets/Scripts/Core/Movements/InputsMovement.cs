@@ -7,12 +7,14 @@ namespace Core.Movements
     {
         private InputController _input;
         private MovementHandler _movement;
+        private FlightHandler _flight;
         private RotationHandler _rotation;
 
-        public InputMovement(InputController input, MovementHandler movement, RotationHandler rotation)
+        public InputMovement(InputController input, MovementHandler movement, FlightHandler flight, RotationHandler rotation)
         {
             _input = input;
             _movement = movement;
+            _flight = flight;
             _rotation = rotation;
 
             _input.MoveButtonPressed += OnMoveButtonPressed;
@@ -24,12 +26,14 @@ namespace Core.Movements
         private void OnMoveButtonPressed(Vector3 direction)
         {
             _movement.Move(direction);
+            _flight.Move(direction);
             _rotation.Rotate(direction);
         }
 
         private void OnMoveButtonsReleased()
         {
             _movement.Move(Vector3.zero);
+            _flight.Move(Vector3.zero);
         }
 
         private void OnJumpButtonPressed()
@@ -39,7 +43,16 @@ namespace Core.Movements
 
         private void OnFlyingButtonPressed()
         {
-            _movement.ToggleFlyingMode();
+            if (_flight.ModeActive)
+            {
+                _flight.Disable();
+                _movement.Enable();
+            }
+            else
+            {
+                _flight.Enable();
+                _movement.Disable();
+            }
         }
     }
 }

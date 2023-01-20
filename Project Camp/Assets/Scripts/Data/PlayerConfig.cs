@@ -11,6 +11,7 @@ namespace Data
         public float FlightSpeed => flightSpeed;
         public float RotationSpeed => rotationSpeed;
         public float GroundDrag => groundDrag;
+        public float FlightDrag => flightDrag;
 
         public float JumpForce => jumpForce;
         public float JumpAirMultiplier => jumpAirMultiplier;
@@ -23,7 +24,12 @@ namespace Data
         [SerializeField] private float flightSpeed;
         [SerializeField] private float rotationSpeed;
         [SerializeField] private float groundDrag;
+
+        [Space]
         [SerializeField] private float jumpForce;
         [SerializeField] private float jumpAirMultiplier;
+        
+        [Space]
+        [SerializeField] private float flightDrag;
     }
 }
