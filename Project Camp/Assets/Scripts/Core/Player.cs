@@ -1,6 +1,5 @@
 using Core.Collisions;
 using Core.Movements;
-using Core.Cameras;
 using UnityEngine;
 
 namespace Core
@@ -35,10 +34,9 @@ namespace Core
             _movement = new MovementHandler(transform, orientation, rb,
                 height, config.GroundDrag, groundLayers, 
                 config.MoveSpeed, config.JumpForce, config.JumpAirMultiplier);
-            _movement.Enable();
 
             _flight = new FlightHandler(transform, orientation, rb,
-                config.FlightSpeed, config.FlightDrag, height, groundLayers);
+                config.FlightSpeed, config.FlightDrag);
 
             _rotation = new RotationHandler(transform, model, orientation,
                 config.RotationSpeed);
@@ -50,18 +48,15 @@ namespace Core
         {
             float delta = Time.deltaTime;
 
-            _movement.Tick(delta);
-            _rotation.Tick(delta);
-
             _input.Tick(delta);
+            _inputMovement.Tick(delta);
         }
         
         private void FixedUpdate()
         {
             float delta = Time.fixedDeltaTime;
 
-            _movement.FixedTick(delta);    
-            _flight.FixedTick(delta);
+            _inputMovement.FixedTick(delta);
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Core.Movements
 {
-    public class MovementHandler
+    public class MovementHandler : IMoveable
     {
         private Transform _transform;
         private Transform _orientation;
@@ -12,15 +12,13 @@ namespace Core.Movements
         private float _jumpForce;
         private float _jumpAirMultiplier;
 
-        private bool _modeActive;
-
         private Vector3 _inputDirection;
+
+        private bool _isOnGround;
 
         private float _height;
         private float _groundDrag;
         private LayerMask _groundLayers;
-
-        private bool _isOnGround;
 
         private const float _heightOffset = .2f;
 
@@ -43,26 +41,17 @@ namespace Core.Movements
 
         public void Enable()
         {
-            _modeActive = true;
             _rigidbody.useGravity = true;
         }
 
-        public void Disable() => _modeActive = false;
-
         public void Tick(float deltaTime)
         {
-            if (!_modeActive)
-                return;
-
-            _isOnGround = Physics.Raycast(_transform.position, Vector3.down, _height * .5f + _heightOffset, _groundLayers);
+            _isOnGround = IsOnGround();
             _rigidbody.drag = _isOnGround ? _groundDrag : 0;
         }
 
         public void FixedTick(float fixedDeltaTime)
         {
-            if (!_modeActive)
-                return;
-
             float multi = _isOnGround ? 1 : _jumpAirMultiplier;
 
             var moveDirection = _orientation.forward * _inputDirection.z + _orientation.right * _inputDirection.x;
@@ -71,17 +60,19 @@ namespace Core.Movements
             LimitVelocity();
         }
 
-        public void Move(Vector3 direction)
+        public bool IsOnGround()
         {
-            if (!_modeActive)
-                return;
+            return Physics.Raycast(_transform.position, Vector3.down, _height * .5f + _heightOffset, _groundLayers);
+        }
 
-            _inputDirection = direction;
+        public void Move(Vector3 cameraPosition, Vector3 input)
+        {
+            _inputDirection = input;
         }
 
         public void TryJump()
         {
-            if (!_modeActive || !_isOnGround)
+            if (!_isOnGround)
                 return;
 
             Jump();

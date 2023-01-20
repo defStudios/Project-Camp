@@ -14,9 +14,6 @@ namespace Core.Input
         public event FlightModeInputHandler OnFlightModePressed;
         public delegate void FlightModeInputHandler();
 
-        public event FlightInputHandler OnFlightInputPressed;
-        public delegate void FlightInputHandler(Vector3 direction);
-
         private float _flyingActivationWindowDuration;
         private float _currentFlyingActivationWindow;
 
@@ -41,6 +38,10 @@ namespace Core.Input
                 moveDirection += Vector3.left;
             if (InputModule.GetKey(KeyCode.D))
                 moveDirection += Vector3.right;
+            if (InputModule.GetKey(KeyCode.Space))
+                moveDirection += Vector3.up;
+            if (InputModule.GetKey(KeyCode.LeftShift))
+                moveDirection += Vector3.down;
 
             if (moveDirection != Vector3.zero ||
                 moveDirection != _lastMovementDirection)
@@ -48,6 +49,8 @@ namespace Core.Input
                 OnMoveInput?.Invoke(_cameraTransform.position, moveDirection);
             }
 
+            _lastMovementDirection = moveDirection;
+            
             if (_currentFlyingActivationWindow > 0)
                 _currentFlyingActivationWindow -= deltaTime;
 
@@ -64,13 +67,6 @@ namespace Core.Input
                     _currentFlyingActivationWindow = _flyingActivationWindowDuration;
                 }
             }
-
-            if (InputModule.GetKey(KeyCode.Space))
-                OnFlightInputPressed?.Invoke(Vector3.up);
-            if (InputModule.GetKey(KeyCode.LeftShift))
-                OnFlightInputPressed?.Invoke(Vector3.down);
-
-            _lastMovementDirection = moveDirection;
         }
     }
 }

@@ -6,6 +6,9 @@ namespace Core.Movements
     public class InputMovement
     {
         private InputController _input;
+
+        private IMoveable _currentHandler;
+
         private MovementHandler _movement;
         private FlightHandler _flight;
         private RotationHandler _rotation;
@@ -19,42 +22,46 @@ namespace Core.Movements
 
             _input.OnMoveInput += OnMoveButtonPressed;
             _input.OnJumpInputPressed += OnJumpButtonPressed;
-
             _input.OnFlightModePressed += OnFlyingButtonPressed;
-            _input.OnFlightInputPressed += OnFlightInputPressed;
+
+            SetCurrentHandler(_movement);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            if (_currentHandler != _movement && _movement.IsOnGround())
+                SetCurrentHandler(_movement);
+
+            _currentHandler.Tick(deltaTime);
+            _rotation.Tick(deltaTime);
+        }
+
+        public void FixedTick(float deltaTime)
+        {
+            _currentHandler.FixedTick(deltaTime);
         }
 
         private void OnMoveButtonPressed(Vector3 camPosition, Vector3 moveDirection)
         {
-            _movement.Move(moveDirection);
-            _flight.Move(camPosition, moveDirection);
-
+            _currentHandler.Move(camPosition, moveDirection);
             _rotation.Rotate(camPosition, moveDirection);
         }
 
         private void OnJumpButtonPressed()
         {
-            _movement.TryJump();
+            if (_currentHandler == _movement)
+                _movement.TryJump();
         }
 
         private void OnFlyingButtonPressed()
         {
-            // ???
-            if (_flight.ModeActive)
-            {
-                _flight.Disable();
-                _movement.Enable();
-            }
-            else
-            {
-                _flight.Enable();
-                _movement.Disable();
-            }
+            SetCurrentHandler(_currentHandler == _movement ? _flight : _movement);
         }
 
-        private void OnFlightInputPressed(Vector3 moveDirection)
+        private void SetCurrentHandler(IMoveable handler)
         {
-            _flight.ChangeAltitude(moveDirection);
+            _currentHandler = handler;
+            _currentHandler.Enable();
         }
     }
 }
