@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flyingActivationWindow: 0.5
   moveSpeed: 80
-  flightSpeed: 200
+  flightSpeed: 140
   rotationSpeed: 15
   groundDrag: 5
   jumpForce: 12

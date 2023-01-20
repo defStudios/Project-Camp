@@ -4,7 +4,6 @@ namespace Core.Movements
 {
     public class FlightHandler : IMoveable
     {
-        private Transform _transform;
         private Transform _orientation;
         private Rigidbody _rigidbody;
 
@@ -12,12 +11,10 @@ namespace Core.Movements
         private float _flightDrag;
         
         private Vector3 _inputDirection;
-        private Vector3 _camDirection;
 
-        public FlightHandler(Transform transform, Transform orientation, Rigidbody rigidbody,
+        public FlightHandler(Transform orientation, Rigidbody rigidbody,
             float fightSpeed, float flightDrag)
         {
-            _transform = transform;
             _orientation = orientation;
             _rigidbody = rigidbody;
 
@@ -38,29 +35,16 @@ namespace Core.Movements
 
         public void FixedTick(float fixedDeltaTime)
         {
-            //var moveDirection = new Vector3(
-            //    _camDirection.x * _inputDirection.z,
-            //    _camDirection.y * _inputDirection.z,
-            //    _camDirection.z * _inputDirection.z);
+            var moveDirection = _orientation.forward * _inputDirection.z + _orientation.right * _inputDirection.x;
+            moveDirection.y = _inputDirection.y;
 
+            _rigidbody.AddForce(moveDirection.normalized * _flightSpeed, ForceMode.Force);
 
-            //_orientation.forward * _inputDirection.z + 
-            //_orientation.up * _inputDirection.z + 
-            //_orientation.right * _inputDirection.x;
-
-            //_rigidbody.AddForce(moveDirection.normalized * _flightSpeed, ForceMode.Force);
-
-
-
-            //var moveDirection = _inputDirection;    //_orientation.forward * _inputDirection.z + _orientation.right * _inputDirection.x;
-            //_rigidbody.AddForce(moveDirection.normalized * _flightSpeed, ForceMode.Force);
-
-            //LimitVelocity();
+            LimitVelocity();
         }
 
         public void Move(Vector3 cameraPosition, Vector3 input)
         {
-            _camDirection = (_transform.position - cameraPosition).normalized;
             _inputDirection = input;
         }
 

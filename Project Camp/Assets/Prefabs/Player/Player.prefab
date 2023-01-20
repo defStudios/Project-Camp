@@ -179,14 +179,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: 72ef819301f2440b6be0ad61777bd8e6, type: 2}
-  height: 1
+  height: 2
   groundLayers:
     serializedVersion: 2
     m_Bits: 192
   model: {fileID: 1647508622591594312}
   orientation: {fileID: 4485283590379349217}
   rb: {fileID: 1647508623990145098}
-  followCamCreator: {fileID: 0}
   collisions: {fileID: 1647508622591594316}
 --- !u!1 &1773687539561289628
 GameObject:

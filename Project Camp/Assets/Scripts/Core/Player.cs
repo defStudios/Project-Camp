@@ -16,7 +16,6 @@ namespace Core
         [SerializeField] private Rigidbody rb;
 
         [Space]
-        [SerializeField] private Cinemachine.CinemachineVirtualCameraBase vcam;
         [SerializeField] private CollisionHandler collisions;
 
         private Input.InputController _input;
@@ -35,8 +34,7 @@ namespace Core
                 height, config.GroundDrag, groundLayers, 
                 config.MoveSpeed, config.JumpForce, config.JumpAirMultiplier);
 
-            _flight = new FlightHandler(transform, orientation, rb,
-                config.FlightSpeed, config.FlightDrag);
+            _flight = new FlightHandler(orientation, rb, config.FlightSpeed, config.FlightDrag);
 
             _rotation = new RotationHandler(transform, model, orientation,
                 config.RotationSpeed);

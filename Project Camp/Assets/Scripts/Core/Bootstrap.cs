@@ -1,12 +1,21 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Bootstrap : MonoBehaviour
+namespace Core
 {
-
-
-    private void Awake()
+    public class Bootstrap : MonoBehaviour
     {
-        // initialization
+        [SerializeField] private Cinemachine.CinemachineVirtualCameraBase vCamera;
+
+        [Space]
+        [SerializeField] private Player player;
+        [SerializeField] private Vector3 spawnPosition;
+
+        private void Awake()
+        {
+            var playerInst = Instantiate(player, spawnPosition, Quaternion.identity);
+
+            vCamera.Follow = playerInst.transform;
+            vCamera.LookAt = playerInst.transform;
+        }
     }
 }
