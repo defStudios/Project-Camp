@@ -5,6 +5,14 @@ namespace Core.Movements
 {
     public class MovementHandler
     {
+        public enum MovementType
+        {
+            Running,
+            Flying
+        }
+
+        private MovementType moveType;
+
         private Transform transform;
         private Rigidbody rb;
 
@@ -17,12 +25,22 @@ namespace Core.Movements
             this.moveSpeed = moveSpeed;
         }
 
-        public void Move(Vector3 direction)
+        public void Tick(float deltaTime)
         {
 
         }
 
-        public void Tick(float deltaTime)
+        public void Move(Vector3 direction)
+        {
+            // 
+        }
+
+        public void Jump()
+        {
+
+        }
+
+        public void ToggleFlyingMode()
         {
 
         }
