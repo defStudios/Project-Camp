@@ -1,11 +1,17 @@
+using Collectibles;
 using Core.Collisions;
 using Core.Movements;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Core
 {
     public class Player : MonoBehaviour
     {
+        public int ArtifactsCount { get; private set; }
+
+        public System.Action OnArtifactGot;
+
         [SerializeField] private Data.PlayerConfig config;
 
         [Space]
@@ -24,6 +30,8 @@ namespace Core
         private RotationHandler _rotation;
         private InputMovement _inputMovement;
 
+        private List<Artifact> _artifacts;
+
         private void Start()
         {
             var camTransf = Camera.main.transform;
@@ -40,6 +48,8 @@ namespace Core
                 config.RotationSpeed);
 
             _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
+
+            _artifacts = new List<Artifact>();
         }
 
         private void Update()
@@ -55,6 +65,17 @@ namespace Core
             float delta = Time.fixedDeltaTime;
 
             _inputMovement.FixedTick(delta);
+        }
+
+        public void CollectArtifact(Collectibles.Artifact artifact)
+        {
+            if (_artifacts.Contains(artifact))
+                return;
+
+            _artifacts.Add(artifact);
+
+            ArtifactsCount++;
+            OnArtifactGot?.Invoke();
         }
     }
 }

@@ -1,39 +1,39 @@
 using UnityEngine;
 
-public class Lighthouse : MonoBehaviour
+namespace Environment
 {
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private Transform lampRotationOrigin;
-    [SerializeField] private Transform lamp;
-    [SerializeField] private GameObject lampLight;
-
-    private bool lampActive;
-
-    private void Start()
+    public class Lighthouse : MonoBehaviour
     {
-        TurnOffLights();
-    }
+        [SerializeField] private float rotationSpeed;
+        [SerializeField] private Transform lampRotationOrigin;
+        [SerializeField] private Transform lamp;
+        [SerializeField] private GameObject lampLight;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-            TurnOnLights();
+        private bool lampActive;
 
-        if (lampActive)
+        private void Start()
         {
-            lamp.RotateAround(lampRotationOrigin.position, Vector3.up, rotationSpeed * Time.deltaTime);
+            TurnOffLights();
         }
-    }
 
-    private void TurnOnLights()
-    {
-        lampActive = true;
-        lampLight.SetActive(true);
-    }
+        private void Update()
+        {
+            if (lampActive)
+            {
+                lamp.RotateAround(lampRotationOrigin.position, Vector3.up, rotationSpeed * Time.deltaTime);
+            }
+        }
 
-    private void TurnOffLights()
-    {
-        lampActive = false;
-        lampLight.SetActive(false);
+        public void TurnOnLights()
+        {
+            lampActive = true;
+            lampLight.SetActive(true);
+        }
+
+        public void TurnOffLights()
+        {
+            lampActive = false;
+            lampLight.SetActive(false);
+        }
     }
 }

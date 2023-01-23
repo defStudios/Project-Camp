@@ -2,17 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Artifact : MonoBehaviour
+namespace Collectibles
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Artifact : MonoBehaviour
     {
-        
-    }
+        void Start()
+        {
 
-    // Update is called once per frame
-    void Update()
-    {
+        }
+
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            bool isPlayer = collision.gameObject.TryGetComponent<Core.Player>(out var player);
+            if (!isPlayer)
+                return;
         
+            player.CollectArtifact(this);
+            DestroyArtifact();
+        }
+
+        private void DestroyArtifact()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
