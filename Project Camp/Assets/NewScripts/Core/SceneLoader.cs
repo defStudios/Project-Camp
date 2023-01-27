@@ -19,6 +19,12 @@ namespace BeaconProject.Core
 
 		private IEnumerator SceneLoading(string name, Action onLoaded = null)
 		{
+			if (SceneManager.GetActiveScene().name.Equals(name))
+			{
+				onLoaded?.Invoke();
+				yield break;
+			}
+			
 			AsyncOperation waitForLoad = SceneManager.LoadSceneAsync(name);
 
 			while (!waitForLoad.isDone)
