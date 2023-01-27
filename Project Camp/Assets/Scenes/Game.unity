@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.010850523, g: 0.01124711, b: 0.01219036, a: 1}
+  m_IndirectSpecularColor: {r: 0.010850518, g: 0.011247102, b: 0.0121903485, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1430,6 +1430,65 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
+--- !u!1001 &7166174019083881918
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 2
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158496, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166174018286158498, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
+      propertyPath: m_Name
+      value: Bootstrap_2.0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_AddedGameObjects: []
+  m_SourcePrefab: {fileID: 100100000, guid: 853d5189e1ced4ba7908b9baca6353ef, type: 3}
 --- !u!114 &7237565340580424579
 MonoBehaviour:
   m_ObjectHideFlags: 3
