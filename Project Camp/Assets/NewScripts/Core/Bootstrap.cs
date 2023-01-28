@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using BeaconProject.Core.States;
 using UnityEngine;
 
 namespace BeaconProject.Core

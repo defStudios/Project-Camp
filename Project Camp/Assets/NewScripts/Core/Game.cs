@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BeaconProject.Core.Services;
 
 namespace BeaconProject.Core
 {
@@ -8,7 +8,7 @@ namespace BeaconProject.Core
 
 		public Game(ICoroutineRunner coroutineRunner)
 		{
-			StateMachine = new StateMachine(new SceneLoader(coroutineRunner));
+			StateMachine = new StateMachine(new SceneLoader(coroutineRunner), AllServices.Container);
 		}
 	}
 }

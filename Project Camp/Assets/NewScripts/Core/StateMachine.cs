@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using BeaconProject.Core.States;
+using System.Collections.Generic;
 using System;
+using BeaconProject.Core.Factories;
+using BeaconProject.Core.Services;
 
 namespace BeaconProject.Core
 {
@@ -8,12 +11,12 @@ namespace BeaconProject.Core
 		private readonly Dictionary<Type, IExitableState> _states;
 		private IExitableState _activeState;
 
-		public StateMachine(SceneLoader sceneLoader)
+		public StateMachine(SceneLoader sceneLoader, AllServices services)
 		{
 			_states = new Dictionary<Type, IExitableState>()
 			{
-				[typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
-				[typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
+				[typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
+				[typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>()),
 				[typeof(GameLoopState)] = new GameLoopState(this),
 			};
 		}

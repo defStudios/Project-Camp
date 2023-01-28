@@ -1,14 +1,19 @@
-namespace BeaconProject.Core
+using BeaconProject.Core.Factories;
+using UnityEngine;
+
+namespace BeaconProject.Core.States
 {
     public class LoadLevelState : IPayloadedState<string>
     {
         private readonly StateMachine _stateMachine;
         private readonly SceneLoader _sceneLoader;
+        private readonly IGameFactory _gameFactory;
 
-        public LoadLevelState(StateMachine stateMachine, SceneLoader sceneLoader)
+        public LoadLevelState(StateMachine stateMachine, SceneLoader sceneLoader, IGameFactory gameFactory)
         {
             _stateMachine = stateMachine;
             _sceneLoader = sceneLoader;
+            _gameFactory = gameFactory;
         }
         
         public void Enter(string sceneName)
@@ -24,9 +29,14 @@ namespace BeaconProject.Core
 
         private void OnSceneLoaded()
         {
-            // instantiate player
+            var spawnPoint = GameObject.FindWithTag("SpawnPoint");
+            var player = _gameFactory.CreatePlayer(spawnPoint.transform.position);
+
+            var cam = GameObject.FindWithTag("PlayerCamera").GetComponent<Cinemachine.CinemachineVirtualCameraBase>();
+            cam.Follow = player.transform;
+            cam.LookAt = player.transform;
+            
             // setup level environment
-            // setup camera
          
             _stateMachine.Enter<GameLoopState>();
         }

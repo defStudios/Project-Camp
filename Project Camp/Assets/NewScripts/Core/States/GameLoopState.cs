@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BeaconProject.Core
+namespace BeaconProject.Core.States
 {
     public class GameLoopState : IState
     {

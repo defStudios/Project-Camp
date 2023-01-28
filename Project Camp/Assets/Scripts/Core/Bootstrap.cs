@@ -12,6 +12,7 @@ namespace Core
 
         private void Awake()
         {
+            return;
             var playerInst = Instantiate(player, spawnPosition, Quaternion.identity);
 
             vCamera.Follow = playerInst.transform;
