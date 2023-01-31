@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+using Inventory.Items;
 using UnityEngine;
 
 namespace Collectibles
 {
     public class Artifact : MonoBehaviour
     {
-        void Start()
+        private IItem item;
+
+        private void Start()
         {
-
+            item = new ArtifactItem();
         }
-
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -18,7 +18,7 @@ namespace Collectibles
             if (!isPlayer)
                 return;
         
-            player.CollectArtifact(this);
+            player.Inventory.AddItem(item);
             DestroyArtifact();
         }
 

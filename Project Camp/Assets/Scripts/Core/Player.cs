@@ -1,21 +1,15 @@
-using Collectibles;
 using Core.Collisions;
 using Core.Movements;
-using System.Collections.Generic;
 using UnityEngine;
+using Inventory;
 
 namespace Core
 {
     public class Player : MonoBehaviour
     {
-        public int ArtifactsCount { get; private set; }
-
-        public System.Action OnArtifactGot;
-
         [SerializeField] private Data.PlayerConfig config;
 
         [Space]
-        [SerializeField] private float height;
         [SerializeField] private LayerMask groundLayers;
         [SerializeField] private Transform model;
         [SerializeField] private Transform orientation;
@@ -25,17 +19,19 @@ namespace Core
         [Space]
         [SerializeField] private CollisionHandler collisions;
 
+        public PlayerInventory Inventory { get; private set; }
+        
         private Input.InputController _input;
         private MovementHandler _movement;
         private FlightHandler _flight;
         private RotationHandler _rotation;
         private InputMovement _inputMovement;
 
-        private List<Artifact> _artifacts;
-
-        private void Start()
+        public void Init()
         {
             var camTransf = Camera.main.transform;
+
+            Inventory = new PlayerInventory();
 
             _input = new Input.InputController(camTransf, config.FlyingActivationWindow);
 
@@ -49,8 +45,6 @@ namespace Core
                 config.RotationSpeed);
 
             _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
-
-            _artifacts = new List<Artifact>();
         }
 
         private void Update()
@@ -66,17 +60,6 @@ namespace Core
             float delta = Time.fixedDeltaTime;
 
             _inputMovement.FixedTick(delta);
-        }
-
-        public void CollectArtifact(Collectibles.Artifact artifact)
-        {
-            if (_artifacts.Contains(artifact))
-                return;
-
-            _artifacts.Add(artifact);
-
-            ArtifactsCount++;
-            OnArtifactGot?.Invoke();
         }
     }
 }

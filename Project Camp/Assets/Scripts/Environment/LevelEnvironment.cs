@@ -25,12 +25,17 @@ namespace Environment
         public void Init(Player player)
         {
             this.player = player;
-            player.OnArtifactGot += PlayerGotElement;
+            player.Inventory.InventoryStateChanged += PlayerGotElement;
 
             ArtifactsTotalCount = artifacts.Length;
 
             DisableLighthouse();
             SetNight(true);
+        }
+
+        private void OnDestroy()
+        {
+            player.Inventory.InventoryStateChanged -= PlayerGotElement;
         }
 
         public void DisableLighthouse()
@@ -61,7 +66,7 @@ namespace Environment
 
         private void PlayerGotElement()
         {
-            if (player.ArtifactsCount == ArtifactsTotalCount)
+            if (player.Inventory.GetArtifactsCount() == ArtifactsTotalCount)
             {
                 SetDay();
                 EnableLighthouse();

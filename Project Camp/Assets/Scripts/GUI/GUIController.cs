@@ -4,7 +4,7 @@ namespace GUI
 {
     public class GUIController : MonoBehaviour
     {
-        [SerializeField] private Progressbar progressbar;
+        [SerializeField] private ProgressableObject progressbar;
 
         private Core.Player player;
         private Environment.LevelEnvironment level;
@@ -16,12 +16,12 @@ namespace GUI
 
             progressbar.SetProgress(0, true);
 
-            player.OnArtifactGot += UpdatePlayerProgress;
+            player.Inventory.InventoryStateChanged += UpdatePlayerProgress;
         }
 
         private void UpdatePlayerProgress()
         {
-            progressbar.SetProgress(player.ArtifactsCount / (float)level.ArtifactsTotalCount);
+            progressbar.SetProgress(player.Inventory.GetArtifactsCount() / (float)level.ArtifactsTotalCount);
         }
     }
 }
