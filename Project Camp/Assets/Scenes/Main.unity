@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vCamera: {fileID: 2159556166601038308}
-  player: {fileID: 1647508623990145099, guid: 223d27cff1b174b81a55cd9c7db0c4cb, type: 3}
+  player: {fileID: 1647508623990145099, guid: 7968dc912d5017d4399230cb16e4676e, type: 3}
   spawnPosition: {x: 20, y: 4.2, z: -0.25}
 --- !u!4 &327716690
 Transform:

@@ -5,6 +5,7 @@ namespace Core.Movements
     public class MovementHandler : IMoveable
     {
         private Transform _transform;
+        private Transform _groundChecker;
         private Transform _orientation;
         private Rigidbody _rigidbody;
 
@@ -16,21 +17,20 @@ namespace Core.Movements
 
         private bool _isOnGround;
 
-        private float _height;
         private float _groundDrag;
         private LayerMask _groundLayers;
 
         private const float _heightOffset = .2f;
 
         public MovementHandler(Transform transform, Transform orientation, Rigidbody rigidbody,
-            float height, float groundDrag, LayerMask groundLayers,
+            Transform groundChecker, float groundDrag, LayerMask groundLayers,
             float moveSpeed, float jumpForce, float jumpAirMultiplier)
         {
             _transform = transform;
             _orientation = orientation;
             _rigidbody = rigidbody;
+            _groundChecker = groundChecker;
 
-            _height = height;
             _groundDrag = groundDrag;
             _groundLayers = groundLayers;
 
@@ -62,7 +62,7 @@ namespace Core.Movements
 
         public bool IsOnGround()
         {
-            return Physics.Raycast(_transform.position, Vector3.down, _height * .5f + _heightOffset, _groundLayers);
+            return Physics.Raycast(_groundChecker.position, Vector3.down, _heightOffset, _groundLayers);
         }
 
         public void Move(Vector3 cameraPosition, Vector3 input)

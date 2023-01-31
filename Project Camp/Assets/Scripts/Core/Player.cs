@@ -14,6 +14,7 @@ namespace Core
         [SerializeField] private Transform model;
         [SerializeField] private Transform orientation;
         [SerializeField] private Rigidbody rb;
+        [SerializeField] private Transform groundChecker;
 
         [Space]
         [SerializeField] private CollisionHandler collisions;
@@ -31,7 +32,7 @@ namespace Core
             _input = new Input.InputController(camTransf, config.FlyingActivationWindow);
 
             _movement = new MovementHandler(transform, orientation, rb,
-                height, config.GroundDrag, groundLayers, 
+                groundChecker, config.GroundDrag, groundLayers, 
                 config.MoveSpeed, config.JumpForce, config.JumpAirMultiplier);
 
             _flight = new FlightHandler(orientation, rb, config.FlightSpeed, config.FlightDrag);
