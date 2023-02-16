@@ -8,7 +8,6 @@ namespace Environment
     {
         public int ArtifactsTotalCount { get; private set; }
 
-        [SerializeField] private float transitionDuration;
         [SerializeField] private Data data;
 
         [Space]
@@ -21,6 +20,9 @@ namespace Environment
 
         private Player player;
         private Coroutine transition;
+        private Coroutine rotator;
+        private static readonly int Rotation = Shader.PropertyToID("_Rotation");
+        private static readonly int Exposure = Shader.PropertyToID("_Exposure");
 
         public void Init(Player player)
         {
@@ -31,6 +33,8 @@ namespace Environment
 
             DisableLighthouse();
             SetNight(true);
+
+            rotator = StartCoroutine(SkyboxRotator());
         }
 
         private void OnDestroy()
@@ -48,7 +52,7 @@ namespace Environment
             if (transition != null)
                 StopCoroutine(transition);
 
-            transition = StartCoroutine(ApplyData(data.NightTime, instant ? 0 : transitionDuration));
+            transition = StartCoroutine(ApplyData(data.NightTime, instant ? 0 : data.TransitionDuration));
         }
 
         public void EnableLighthouse()
@@ -61,7 +65,7 @@ namespace Environment
             if (transition != null)
                 StopCoroutine(transition);
 
-            transition = StartCoroutine(ApplyData(data.DayTime, instant ? 0 : transitionDuration));
+            transition = StartCoroutine(ApplyData(data.DayTime, instant ? 0 : data.TransitionDuration));
         }
 
         private void PlayerGotElement()
@@ -73,6 +77,16 @@ namespace Environment
             }
         }
 
+        private IEnumerator SkyboxRotator()
+        {
+            while (true)
+            {
+                float currentRot = skyboxMaterial.GetFloat(Rotation);
+                skyboxMaterial.SetFloat(Rotation,currentRot + data.SyboxRotationSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
+
         private IEnumerator ApplyData(Data.Settings data, float duration)
         {
             float t = 0;
@@ -80,21 +94,18 @@ namespace Environment
             if (duration == 0)
             {
                 light.intensity = data.LightIntensity;
-                skyboxMaterial.SetFloat("_AtmosphereThickness", data.AtmosphereThickness);
-                skyboxMaterial.SetFloat("_Exposure",  data.Exposure);
+                skyboxMaterial.SetFloat(Exposure,  data.Exposure);
 
                 yield break;
             }
 
             float startIntensity = light.intensity;
-            float thickness = skyboxMaterial.GetFloat("_AtmosphereThickness");
-            float exposure = skyboxMaterial.GetFloat("_Exposure");
+            float exposure = skyboxMaterial.GetFloat(Exposure);
 
             while (t < duration)
             {
                 light.intensity = Mathf.Lerp(startIntensity, data.LightIntensity, t / duration);
-                skyboxMaterial.SetFloat("_AtmosphereThickness", Mathf.Lerp(thickness, data.AtmosphereThickness, t / duration));
-                skyboxMaterial.SetFloat("_Exposure", Mathf.Lerp(exposure, data.Exposure, t / duration));
+                skyboxMaterial.SetFloat(Exposure, Mathf.Lerp(exposure, data.Exposure, t / duration));
 
                 t += Time.deltaTime;
                 yield return null;

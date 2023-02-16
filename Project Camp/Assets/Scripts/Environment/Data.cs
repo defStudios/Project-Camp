@@ -10,12 +10,13 @@ namespace Environment
         public class Settings
         {
             [field: SerializeField] public float LightIntensity { get; private set; }
-            [field: SerializeField] public float AtmosphereThickness { get; private set; }
             [field: SerializeField] public float Exposure { get; private set; }
-
         }
 
         [field: SerializeField] public Settings DayTime { get; private set; }
         [field: SerializeField] public Settings NightTime { get; private set; }
+        
+        [field: SerializeField] public float SyboxRotationSpeed { get; private set; }
+        [field: SerializeField] public float TransitionDuration { get; private set; }
     }
 }

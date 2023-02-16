@@ -512,7 +512,7 @@ MonoBehaviour:
   transitionDuration: 7
   data: {fileID: 11400000, guid: 4adbacece288b4040806f004a0e9a40c, type: 2}
   light: {fileID: 705507994}
-  skyboxMaterial: {fileID: 2100000, guid: 2683edb36c03eda4d958a174f13c0f26, type: 2}
+  skyboxMaterial: {fileID: 2100000, guid: f531e09e2ad2fb440b4eed7605863143, type: 2}
   artifacts:
   - {fileID: 2038192965}
   - {fileID: 1732285695}
@@ -663,7 +663,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 0.8254717, g: 0.9969381, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
