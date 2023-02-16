@@ -6,18 +6,17 @@ namespace Core.Input
     public class InputController
     {
         public event MoveInputHandler OnMoveInput;
-        public delegate void MoveInputHandler(Vector3 cameraPosition, Vector3 input);
-
         public event JumpInputHandler OnJumpInputPressed;
-        public delegate void JumpInputHandler();
-
         public event FlightModeInputHandler OnFlightModePressed;
+
+        public delegate void MoveInputHandler(Vector3 cameraPosition, Vector3 input);
+        public delegate void JumpInputHandler();
         public delegate void FlightModeInputHandler();
 
-        private float _flyingActivationWindowDuration;
-        private float _currentFlyingActivationWindow;
+        private readonly float _flyingActivationWindowDuration;
+        private readonly Transform _cameraTransform;
 
-        private Transform _cameraTransform;
+        private float _currentFlyingActivationWindow;
         private Vector3 _lastMovementDirection;
 
         public InputController(Transform cameraTransform, float flyingActivationWindowDuration)
@@ -28,7 +27,7 @@ namespace Core.Input
 
         public void Tick(float deltaTime)
         {
-            Vector3 moveDirection = Vector3.zero;
+            var moveDirection = Vector3.zero;
 
             if (InputModule.GetKey(KeyCode.W))
                 moveDirection += Vector3.forward;

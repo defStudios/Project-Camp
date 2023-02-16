@@ -10,11 +10,11 @@ namespace Core
         [SerializeField] private Data.PlayerConfig config;
 
         [Space]
-        [SerializeField] private LayerMask groundLayers;
         [SerializeField] private Transform model;
         [SerializeField] private Transform orientation;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform groundChecker;
+        [SerializeField] private LayerMask groundLayers;
 
         [Space]
         [SerializeField] private CollisionHandler collisions;
@@ -22,10 +22,10 @@ namespace Core
         public PlayerInventory Inventory { get; private set; }
         
         private Input.InputController _input;
+        private InputMovement _inputMovement;
         private MovementHandler _movement;
         private FlightHandler _flight;
         private RotationHandler _rotation;
-        private InputMovement _inputMovement;
 
         public void Init()
         {
