@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Environment
   m_EditorClassIdentifier: 
   <DayTime>k__BackingField:
-    <LightIntensity>k__BackingField: 1
-    <AtmosphereThickness>k__BackingField: 1
-    <Exposure>k__BackingField: 1
+    <LightIntensity>k__BackingField: 2.5
+    <Exposure>k__BackingField: 4
   <NightTime>k__BackingField:
-    <LightIntensity>k__BackingField: 0.25
-    <AtmosphereThickness>k__BackingField: 0.2
-    <Exposure>k__BackingField: 0.5
+    <LightIntensity>k__BackingField: 1
+    <Exposure>k__BackingField: 1
+  <SyboxRotationSpeed>k__BackingField: 0.4
+  <TransitionDuration>k__BackingField: 4
