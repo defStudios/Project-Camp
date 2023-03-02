@@ -1,3 +1,4 @@
+using Core.Services;
 using UnityEngine;
 
 namespace GUI
@@ -5,7 +6,8 @@ namespace GUI
     public class GUIController : MonoBehaviour
     {
         [SerializeField] private ProgressableObject progressbar;
-
+        [SerializeField] private MessageQueue message;
+        
         private Core.Player player;
         private Environment.LevelEnvironment level;
 
@@ -15,10 +17,12 @@ namespace GUI
             this.level = level;
 
             progressbar.SetProgress(0, true);
+            
+            ServiceManager.Container.Register<IMessageHandler>(message);
 
             player.Inventory.InventoryStateChanged += UpdatePlayerProgress;
         }
-
+        
         private void UpdatePlayerProgress()
         {
             progressbar.SetProgress(player.Inventory.GetArtifactsCount() / (float)level.ArtifactsTotalCount);

@@ -1,5 +1,8 @@
+using System.Collections;
 using Core.Collisions;
 using Core.Movements;
+using Core.Services;
+using GUI;
 using UnityEngine;
 using Inventory;
 
@@ -45,6 +48,8 @@ namespace Core
                 config.RotationSpeed);
 
             _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
+
+            StartCoroutine(InitMessageDelay(1));
         }
 
         private void Update()
@@ -60,6 +65,13 @@ namespace Core
             float delta = Time.fixedDeltaTime;
 
             _inputMovement.FixedTick(delta);
+        }
+
+        private IEnumerator InitMessageDelay(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            ServiceManager.Container.Single<IMessageHandler>().ShowMessage("Я народився!", 4, false);
+            ServiceManager.Container.Single<IMessageHandler>().ShowMessage("<color=red>Свиня_В_Джакузі.png</color>", 4, false);
         }
     }
 }
