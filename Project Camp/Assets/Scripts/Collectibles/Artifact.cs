@@ -1,4 +1,5 @@
 using System;
+using GUI;
 using Inventory.Items;
 using UnityEngine;
 
@@ -8,12 +9,12 @@ namespace Collectibles
     {
         [SerializeField] private Transform origin;
         [SerializeField] private float interactionDuration = 1;
+        [SerializeField] private ProgressableObject symbolProgress;
         
         private IItem _item;
         private Core.Player _player;
 
         private bool _available;
-        private bool _interactable;
 
         private void Start()
         {
@@ -49,10 +50,21 @@ namespace Collectibles
 
         private void EnableInteraction()
         {
-            _interactable = true;
             _player.Input.EnableInteraction(origin, interactionDuration);
             
             _player.Input.OnInteractionCompleted += OnInteractionCompleted;
+            _player.Input.OnInteractionProgressChanged += OnInteractionProgressChanged;
+            _player.Input.OnInteractionInterrupted += OnInteractionInterrupted;
+        }
+
+        private void OnInteractionProgressChanged(float progress)
+        {
+            symbolProgress.SetProgress(progress);
+        }
+
+        private void OnInteractionInterrupted()
+        {
+            symbolProgress.SetProgress(0);            
         }
 
         private void OnInteractionCompleted()
@@ -60,20 +72,18 @@ namespace Collectibles
             _player.Inventory.AddItem(_item);
                 
             DisableInteraction();
-            DestroyArtifact();
+            
+            _available = false;
+            symbolProgress.SetProgress(1);
         }
         
         private void DisableInteraction()
         {
-            _interactable = false;
-            
             _player.Input.DisableInteraction();
+            
             _player.Input.OnInteractionCompleted -= OnInteractionCompleted;
-        }
-        
-        private void DestroyArtifact()
-        {
-            gameObject.SetActive(false);
+            _player.Input.OnInteractionProgressChanged -= OnInteractionProgressChanged;
+            _player.Input.OnInteractionInterrupted -= OnInteractionInterrupted;
         }
     }
 }

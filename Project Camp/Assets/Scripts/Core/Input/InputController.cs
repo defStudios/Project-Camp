@@ -118,9 +118,13 @@ namespace Core.Input
 
         public void DisableInteraction()
         {
+            if (_currentInteractionProgress > 0)
+                OnInteractionInterrupted?.Invoke();
+            
             ResetInteraction();
             
             _interactionActive = false;
+            
             OnInteractionStateChanged?.Invoke(null, false);
         }
 
