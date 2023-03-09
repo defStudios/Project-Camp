@@ -7,13 +7,15 @@ public class OrbitalMovement : MonoBehaviour
     [SerializeField] private Transform[] wisps;
     [SerializeField] private Transform rotationTarget;
     [SerializeField] private float moveSpeed;
+
+    private int _currentWispId;
     
     void Start()
     {
         
     }
 
-    void Update()
+    private void Update()
     {
         foreach (var wisp in wisps)
         {
@@ -22,5 +24,10 @@ public class OrbitalMovement : MonoBehaviour
             pos.y = rotationTarget.position.y;
             wisp.position = pos;
         }
+    }
+
+    public void EnableWisp()
+    {
+        wisps[_currentWispId++].gameObject.SetActive(true);
     }
 }

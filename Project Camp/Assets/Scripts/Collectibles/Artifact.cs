@@ -69,6 +69,7 @@ namespace Collectibles
 
         private void OnInteractionCompleted()
         {
+            _player.Orbit.EnableWisp();
             _player.Inventory.AddItem(_item);
                 
             DisableInteraction();

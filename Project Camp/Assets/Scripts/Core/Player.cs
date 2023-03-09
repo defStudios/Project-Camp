@@ -12,12 +12,13 @@ namespace Core
     {
         [SerializeField] private Data.PlayerConfig config;
 
-        [Space]
-        [SerializeField] private Transform model;
+        [Space, SerializeField] private Transform model;
         [SerializeField] private Transform orientation;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform groundChecker;
         [SerializeField] private LayerMask groundLayers;
+
+        [field: Space, SerializeField] public OrbitalMovement Orbit { get; private set; }
 
         public PlayerInventory Inventory { get; private set; }
         public Input.InputController Input { get; private set; }
