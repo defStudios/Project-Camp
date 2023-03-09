@@ -2,9 +2,9 @@ using System.Collections;
 using Core.Collisions;
 using Core.Movements;
 using Core.Services;
-using GUI;
 using UnityEngine;
 using Inventory;
+using GUI;
 
 namespace Core
 {
@@ -19,12 +19,9 @@ namespace Core
         [SerializeField] private Transform groundChecker;
         [SerializeField] private LayerMask groundLayers;
 
-        [Space]
-        [SerializeField] private CollisionHandler collisions;
-
         public PlayerInventory Inventory { get; private set; }
+        public Input.InputController Input { get; private set; }
         
-        private Input.InputController _input;
         private InputMovement _inputMovement;
         private MovementHandler _movement;
         private FlightHandler _flight;
@@ -36,7 +33,7 @@ namespace Core
 
             Inventory = new PlayerInventory();
 
-            _input = new Input.InputController(camTransf, config.FlyingActivationWindow);
+            Input = new Input.InputController(camTransf, config.FlyingActivationWindow);
 
             _movement = new MovementHandler(transform, orientation, rb,
                 groundChecker, config.GroundDrag, groundLayers, 
@@ -47,7 +44,7 @@ namespace Core
             _rotation = new RotationHandler(transform, model, orientation,
                 config.RotationSpeed);
 
-            _inputMovement = new InputMovement(_input, _movement, _flight, _rotation);
+            _inputMovement = new InputMovement(Input, _movement, _flight, _rotation);
 
             StartCoroutine(InitMessageDelay(1));
         }
@@ -56,7 +53,7 @@ namespace Core
         {
             float delta = Time.deltaTime;
 
-            _input.Tick(delta);
+            Input.Tick(delta);
             _inputMovement.Tick(delta);
         }
         

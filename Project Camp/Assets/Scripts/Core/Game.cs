@@ -19,7 +19,7 @@ namespace Core
             _factory.CreateCamera(Player.transform);
             
             environment.Init(Player);
-            gui.Init(Player, environment);
+            gui.Init(Camera.main, Player, environment);
         }
     }
 }

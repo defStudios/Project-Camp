@@ -9,15 +9,29 @@ namespace Core.Input
         public event JumpInputHandler OnJumpInputPressed;
         public event FlightModeInputHandler OnFlightModePressed;
 
+        public event InteractionActivenessHandler OnInteractionStateChanged;
+        public event InteractionProgressHandler OnInteractionProgressChanged;
+        public event InteractionInterruptionHandler OnInteractionInterrupted;
+        public event InteractionCompletionHandler OnInteractionCompleted;
+
         public delegate void MoveInputHandler(Vector3 cameraPosition, Vector3 input);
         public delegate void JumpInputHandler();
         public delegate void FlightModeInputHandler();
 
+        public delegate void InteractionActivenessHandler(Transform origin, bool enabled);
+        public delegate void InteractionProgressHandler(float progress);
+        public delegate void InteractionCompletionHandler();
+        public delegate void InteractionInterruptionHandler();
+        
         private readonly float _flyingActivationWindowDuration;
         private readonly Transform _cameraTransform;
 
         private float _currentFlyingActivationWindow;
         private Vector3 _lastMovementDirection;
+
+        private bool _interactionActive;
+        private float _currentInteractionDuration;
+        private float _currentInteractionProgress;
 
         public InputController(Transform cameraTransform, float flyingActivationWindowDuration)
         {
@@ -66,6 +80,53 @@ namespace Core.Input
                     _currentFlyingActivationWindow = _flyingActivationWindowDuration;
                 }
             }
+
+            if (InputModule.GetKey(KeyCode.E))
+            {
+                if (_interactionActive)
+                {
+                    _currentInteractionProgress += deltaTime;
+                    
+                    if (_currentInteractionProgress > .99f)
+                    {
+                        OnInteractionCompleted?.Invoke();
+                        ResetInteraction();
+                    }
+                    else
+                        OnInteractionProgressChanged?.Invoke(_currentInteractionProgress);
+                }
+                else if (_currentInteractionProgress > 0)
+                {
+                    OnInteractionInterrupted?.Invoke();
+                    ResetInteraction();
+                }
+            }
+            else if (InputModule.GetKeyUp(KeyCode.E) && _interactionActive)
+            {
+                OnInteractionInterrupted?.Invoke();
+                ResetInteraction();
+            }
+        }
+        
+        public void EnableInteraction(Transform origin, float duration)
+        {
+            _interactionActive = true;
+            _currentInteractionDuration = duration;
+            
+            OnInteractionStateChanged?.Invoke(origin, true);
+        }
+
+        public void DisableInteraction()
+        {
+            ResetInteraction();
+            
+            _interactionActive = false;
+            OnInteractionStateChanged?.Invoke(null, false);
+        }
+
+        private void ResetInteraction()
+        {
+            _currentInteractionProgress = 0;
         }
     }
 }

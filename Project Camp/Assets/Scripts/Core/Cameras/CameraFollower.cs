@@ -5,6 +5,9 @@ namespace Core.Cameras
 {
     public class CameraFollower : MonoBehaviour
     {
+        public Camera Camera => _camera;
+
+        [SerializeField] private Camera _camera;
         [SerializeField] private CinemachineVirtualCameraBase cam;
 
         public void SetTarget(Transform target)
