@@ -5,9 +5,9 @@ namespace Inventory
 {
     public class PlayerInventory
     {
-        public System.Action InventoryStateChanged;
+        public System.Action InventoryStateChanged { get; set; }
 
-        public List<IItem> Items { get; private set; }
+        public List<IItem> Items { get; }
         
         public PlayerInventory()
         {

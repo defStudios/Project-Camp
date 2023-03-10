@@ -17,5 +17,15 @@ namespace Core.Cameras
             cam.Follow = target;
             cam.LookAt = target;
         }
+
+        public void Enable()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Disable()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

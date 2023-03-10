@@ -47,7 +47,7 @@ namespace Core
 
             _inputMovement = new InputMovement(Input, _movement, _flight, _rotation);
 
-            StartCoroutine(InitMessageDelay(1));
+            //StartCoroutine(InitMessageDelay(1));
         }
 
         private void Update()
@@ -63,6 +63,20 @@ namespace Core
             float delta = Time.fixedDeltaTime;
 
             _inputMovement.FixedTick(delta);
+        }
+
+        public void EnableMovement()
+        {
+            Input.Enable();
+            _movement.Enable();
+        }
+
+        public void DisableMovement()
+        {
+            Input.Disable();
+            
+            _movement.Disable();
+            _movement.Stop();
         }
 
         private IEnumerator InitMessageDelay(float duration)

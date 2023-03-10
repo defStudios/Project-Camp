@@ -1,3 +1,4 @@
+using Core.Cameras;
 using Core.Factories;
 using UnityEngine;
 using Environment;
@@ -7,7 +8,8 @@ namespace Core
 {
     public class Game 
     {
-        public Player Player { get; private set; }
+        public Player Player { get; }
+        public CameraFollower PlayerCamera { get; }
 
         private readonly IGameFactory _factory;
         
@@ -16,7 +18,8 @@ namespace Core
             _factory = factory;
 
             Player = _factory.CreatePlayer(spawnPosition);
-            _factory.CreateCamera(Player.transform);
+            PlayerCamera = _factory.CreateCamera(Player.transform);
+            PlayerCamera.Disable();
             
             environment.Init(Player);
             gui.Init(Camera.main, Player, environment);

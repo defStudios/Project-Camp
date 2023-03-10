@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Core;
+using DG.Tweening;
 
 namespace Environment
 {
@@ -10,23 +11,30 @@ namespace Environment
 
         [SerializeField] private Data data;
 
-        [Space]
-        [SerializeField] private Light light;
+        [Space, SerializeField] private Light light;
         [SerializeField] private Material skyboxMaterial;
         
-        [Space]
-        [SerializeField] private GameObject[] artifacts;
+        [Space, SerializeField] private GameObject[] artifacts;
         [SerializeField] private Lighthouse lighthouse;
 
-        private Player player;
-        private Coroutine transition;
-        private Coroutine rotator;
+        [Space, SerializeField] private GameObject levelFinishMarker;
+        [SerializeField] private float initTimeout;
+        [SerializeField] private float cameraBlendDuration;
+        [SerializeField] private float playerInDuration;
+        [SerializeField] private float playerOutDuration;
+        [SerializeField] private float playerLiftUpDuration;
+        [SerializeField] private float playerLiftDownDuration;
+        
+        private Player _player;
+        private Coroutine _transition;
+        private Coroutine _rotator;
+        
         private static readonly int Rotation = Shader.PropertyToID("_Rotation");
         private static readonly int Exposure = Shader.PropertyToID("_Exposure");
 
         public void Init(Player player)
         {
-            this.player = player;
+            _player = player;
             player.Inventory.InventoryStateChanged += PlayerGotElement;
 
             ArtifactsTotalCount = artifacts.Length;
@@ -34,12 +42,14 @@ namespace Environment
             DisableLighthouse();
             SetNight(true);
 
-            rotator = StartCoroutine(SkyboxRotator());
+            _rotator = StartCoroutine(SkyboxRotator());
+
+            StartLevel();
         }
 
         private void OnDestroy()
         {
-            player.Inventory.InventoryStateChanged -= PlayerGotElement;
+            _player.Inventory.InventoryStateChanged -= PlayerGotElement;
         }
 
         public void DisableLighthouse()
@@ -49,32 +59,100 @@ namespace Environment
 
         public void SetNight(bool instant = false)
         {
-            if (transition != null)
-                StopCoroutine(transition);
+            if (_transition != null)
+                StopCoroutine(_transition);
 
-            transition = StartCoroutine(ApplyData(data.NightTime, instant ? 0 : data.TransitionDuration));
+            _transition = StartCoroutine(ApplyData(data.NightTime, instant ? 0 : data.TransitionDuration));
         }
 
         public void EnableLighthouse()
         {
-            lighthouse.TurnOnLights();
+            SetDay();
+            //lighthouse.TurnOnLights();
         }
 
         public void SetDay(bool instant = false)
         {
-            if (transition != null)
-                StopCoroutine(transition);
+            if (_transition != null)
+                StopCoroutine(_transition);
 
-            transition = StartCoroutine(ApplyData(data.DayTime, instant ? 0 : data.TransitionDuration));
+            _transition = StartCoroutine(ApplyData(data.DayTime, instant ? 0 : data.TransitionDuration));
+        }
+
+        public void OnFinishMarkerTriggerEnter(Collider other)
+        {
+            bool isPlayer = other.TryGetComponent<Player>(out var player);
+            if (!isPlayer)
+                return;
+            
+            CompleteLevel();
+        }
+
+        private void StartLevel()
+        {
+            levelFinishMarker.SetActive(false);
+
+            var sequence = DOTween.Sequence();
+            sequence
+                .AppendInterval(initTimeout)
+                .AppendCallback(() =>
+                {
+                    lighthouse.LiftDown(playerLiftDownDuration, Bootstrap.Game.Player.transform);
+                })
+                .AppendInterval(playerLiftDownDuration + .5f)
+                .AppendCallback(() =>
+                {
+                    Bootstrap.Game.Player.transform.DOMove(levelFinishMarker.transform.position, playerOutDuration);
+                })
+                .AppendInterval(playerOutDuration + .5f)
+                .AppendCallback(() =>
+                {
+                    Bootstrap.Game.PlayerCamera.Enable();
+                })
+                .AppendInterval(cameraBlendDuration + .5f)
+                .AppendCallback(() =>
+                {
+                    Bootstrap.Game.Player.EnableMovement();
+                });
+        }
+
+        private void CompleteLevel()
+        {
+            levelFinishMarker.SetActive(false);
+
+            Bootstrap.Game.PlayerCamera.Disable();
+            Bootstrap.Game.Player.DisableMovement();
+            
+            Bootstrap.Game.Player.transform.position = levelFinishMarker.transform.position;
+
+            var sequence = DOTween.Sequence();
+            sequence
+                .AppendInterval(cameraBlendDuration)
+                .AppendCallback(() =>
+                {
+                    Bootstrap.Game.Player.transform.DOMove(lighthouse.LiftPlayerPosition.position, playerInDuration);
+                })
+                .AppendInterval(playerInDuration + .5f)
+                .AppendCallback(() =>
+                {
+                    lighthouse.LiftUp(playerLiftUpDuration, Bootstrap.Game.Player.transform);
+                })
+                .AppendInterval(playerLiftUpDuration + .5f)
+                .AppendCallback(() =>
+                {
+                    EnableLighthouse();
+                });
         }
 
         private void PlayerGotElement()
         {
-            if (player.Inventory.GetArtifactsCount() == ArtifactsTotalCount)
-            {
-                SetDay();
-                EnableLighthouse();
-            }
+            if (_player.Inventory.GetArtifactsCount() == ArtifactsTotalCount)
+                AllowLevelCompletion();
+        }
+
+        private void AllowLevelCompletion()
+        {
+            levelFinishMarker.SetActive(true);
         }
 
         private IEnumerator SkyboxRotator()

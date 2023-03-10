@@ -44,6 +44,11 @@ namespace Core.Movements
             _rigidbody.useGravity = true;
         }
 
+        public void Disable()
+        {
+            _rigidbody.useGravity = true;
+        }
+
         public void Tick(float deltaTime)
         {
             _isOnGround = IsOnGround();
@@ -68,6 +73,11 @@ namespace Core.Movements
         public void Move(Vector3 cameraPosition, Vector3 input)
         {
             _inputDirection = input;
+        }
+
+        public void Stop()
+        {
+            _inputDirection = Vector3.zero;
         }
 
         public void TryJump()

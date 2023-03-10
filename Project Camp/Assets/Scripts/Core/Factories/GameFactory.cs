@@ -22,10 +22,12 @@ namespace Core.Factories
             return player;
         }
         
-        public void CreateCamera(Transform target)
+        public CameraFollower CreateCamera(Transform target)
         {
             var cam = Object.Instantiate(_camera);
             cam.SetTarget(target);
+            
+            return cam;
         }
     }
 }

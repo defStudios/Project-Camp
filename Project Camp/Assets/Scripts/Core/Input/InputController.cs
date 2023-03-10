@@ -33,6 +33,8 @@ namespace Core.Input
         private float _currentInteractionDuration;
         private float _currentInteractionProgress;
 
+        private bool _enabled;
+
         public InputController(Transform cameraTransform, float flyingActivationWindowDuration)
         {
             _cameraTransform = cameraTransform;
@@ -41,6 +43,9 @@ namespace Core.Input
 
         public void Tick(float deltaTime)
         {
+            if (!_enabled)
+                return;
+            
             var moveDirection = Vector3.zero;
 
             if (InputModule.GetKey(KeyCode.W))
@@ -106,6 +111,16 @@ namespace Core.Input
                 OnInteractionInterrupted?.Invoke();
                 ResetInteraction();
             }
+        }
+
+        public void Enable()
+        {
+            _enabled = true;
+        }
+
+        public void Disable()
+        {
+            _enabled = false;
         }
         
         public void EnableInteraction(Transform origin, float duration)
